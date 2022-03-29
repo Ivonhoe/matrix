@@ -21,6 +21,9 @@ package com.tencent.matrix.trace;
  */
 public class TraceBuildConstants {
 
+    public final static String MATRIX_TRACE_SYSTRACE_CLASS = "com/tencent/matrix/trace/core/TraceTag";
+    public final static int MAX_SECTION_NAME_LEN = 127;
+
     public final static String MATRIX_TRACE_CLASS = "com/tencent/matrix/trace/core/AppMethodBeat";
     public final static String MATRIX_TRACE_ON_WINDOW_FOCUS_METHOD = "onWindowFocusChanged";
     public final static String MATRIX_TRACE_ATTACH_BASE_CONTEXT = "attachBaseContext";
@@ -38,7 +41,8 @@ public class TraceBuildConstants {
     public final static String DEFAULT_BLOCK_TRACE =
                     "[package]\n"
                     + "-keeppackage android/\n"
-                    + "-keeppackage com/tencent/matrix/\n";
+                    + "-keeppackage com/tencent/matrix/\n"
+                    + "-keepclass com/tencent/matrix/trace/core/TraceTag\n";
 
     private static final int METHOD_ID_MAX = 0xFFFFF;
     public static final int METHOD_ID_DISPATCH = METHOD_ID_MAX - 1;

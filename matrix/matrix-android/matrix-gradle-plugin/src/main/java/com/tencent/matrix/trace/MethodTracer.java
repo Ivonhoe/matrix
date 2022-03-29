@@ -377,6 +377,22 @@ public class MethodTracer {
                 if (checkNeedTraceWindowFocusChangeMethod(traceMethod)) {
                     traceWindowFocusChangeMethod(mv, className);
                 }
+
+                // 插入systrace的调用
+                String sectionName = methodName;
+                int length = sectionName.length();
+                if (length > TraceBuildConstants.MAX_SECTION_NAME_LEN) {
+                    // 先去掉参数
+                    int parmIndex = sectionName.indexOf('(');
+                    sectionName = sectionName.substring(0, parmIndex);
+                    // 如果依然更大，直接裁剪
+                    length = sectionName.length();
+                    if (length > TraceBuildConstants.MAX_SECTION_NAME_LEN) {
+                        sectionName = sectionName.substring(length - TraceBuildConstants.MAX_SECTION_NAME_LEN);
+                    }
+                }
+                mv.visitLdcInsn(sectionName);
+                mv.visitMethodInsn(INVOKESTATIC, TraceBuildConstants.MATRIX_TRACE_SYSTRACE_CLASS, "i", "(Ljava/lang/String;)V", false);
             }
         }
 
@@ -405,6 +421,9 @@ public class MethodTracer {
                 traceMethodCount.incrementAndGet();
                 mv.visitLdcInsn(traceMethod.id);
                 mv.visitMethodInsn(INVOKESTATIC, TraceBuildConstants.MATRIX_TRACE_CLASS, "o", "(I)V", false);
+
+                // 插入systrace的调用
+                mv.visitMethodInsn(INVOKESTATIC, TraceBuildConstants.MATRIX_TRACE_SYSTRACE_CLASS, "o", "()V", false);
             }
         }
 
